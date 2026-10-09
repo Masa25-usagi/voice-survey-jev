@@ -1,0 +1,12 @@
+node_modules/
+dist/
+demo/bundle.js
+demo/bundle.js.LEGAL.txt
+*.tgz
+.env
+.env.*
+!.env.example
+coverage/
+*.log
+*.credentials.json
+.DS_Store

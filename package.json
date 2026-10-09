@@ -1,0 +1,28 @@
+{
+  "name": "voice-survey-jev",
+  "version": "0.1.0",
+  "description": "Independent, framework-neutral voice surveys with Jev answer mapping and dialogue adaptation",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/Masa25-usagi/voice-survey-jev.git" },
+  "homepage": "https://github.com/Masa25-usagi/voice-survey-jev#readme",
+  "bugs": { "url": "https://github.com/Masa25-usagi/voice-survey-jev/issues" },
+  "type": "module",
+  "engines": { "node": ">=22.18.0" },
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./browser": { "types": "./dist/widget.d.ts", "import": "./dist/widget.js" },
+    "./server": { "types": "./dist/server/index.d.ts", "import": "./dist/server/index.js" },
+    "./providers": { "types": "./dist/providers/index.d.ts", "import": "./dist/providers/index.js" }
+  },
+  "files": ["dist", "demo", "docs", "README.md", "LICENSE", "PROVENANCE.md", "THIRD_PARTY.md"],
+  "scripts": {
+    "build": "tsc && node scripts/build-demo.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "demo": "npm run build && node demo/server.mjs",
+    "prepack": "npm run build",
+    "check:public": "node scripts/check-public.mjs"
+  },
+  "dependencies": { "@google/genai": "2.28.0" },
+  "devDependencies": { "typescript": "7.0.2", "esbuild": "0.28.2" }
+}
