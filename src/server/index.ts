@@ -8,6 +8,7 @@ import { dialogueRequest, mapDialogue, OBSERVATION_ENUMS, safeObservation } from
 import type { Fetcher } from "../http.js";
 import { JevClient } from "./jev-client.js";
 import { interviewInstructions, speakingPreferences, sourceTool, profileTool } from "./instructions.js";
+import type { Mapper, Analyst } from "../interview.js";
 
 export interface VoiceModel { provider: "gemini" | "openai"; model: string; label: string }
 export interface ServerOptions {
@@ -26,6 +27,7 @@ export interface ServerOptions {
   basePath?: string;
   fetcher?: Fetcher;
   timeoutMs?: number;
+  analysis?: { mapper: Mapper; analyst: Analyst };
   // Injection points for licensed SDK calls and deterministic contract testing.
   mintGemini?: (config: LiveConnectConfig, model: string, signal: AbortSignal) => Promise<string>;
   observeImage?: (jpeg: string, signal: AbortSignal) => Promise<unknown>;
@@ -71,6 +73,7 @@ export function createSurveyHandler(options: ServerOptions): (request: Request) 
         const question = survey.questions.find(q => q.id === input.questionId); if (!question) throw new InvalidInput();
         let turns; try { turns = normalizedTurns(input.turns); } catch { throw new InvalidInput(); }
         if (!turns.some(t => t.role === "user")) return json({ disposition: "no_answer", model, usage: { inputTokens: 0, outputTokens: 0 } });
+        if (options.analysis) return json(await options.analysis.mapper({ question, turns, signal: ac.signal }));
         const result = await client.evaluate(answerRequest(question, turns, model), ac.signal);
         return json(mapAnswer(question, turns, result));
       }
@@ -78,6 +81,7 @@ export function createSurveyHandler(options: ServerOptions): (request: Request) 
         let turns; try { turns = normalizedTurns(input.turns); } catch { throw new InvalidInput(); }
         if (!turns.some(t => t.role === "user")) throw new InvalidInput();
         const camera = safeObservation(input.camera);
+        if (options.analysis) return json(await options.analysis.analyst({ turns, camera, signal: ac.signal }));
         const started = Date.now();
         const result = await client.evaluate(dialogueRequest(turns, camera, model), ac.signal);
         return json({ ...mapDialogue(turns, camera, result), latencyMs: Date.now() - started });
