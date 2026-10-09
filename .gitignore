@@ -1,4 +1,5 @@
 node_modules/
+lab/
 dist/
 demo/bundle.js
 demo/bundle.js.LEGAL.txt

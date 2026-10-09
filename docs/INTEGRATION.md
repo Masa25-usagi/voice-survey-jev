@@ -1,3 +1,7 @@
+# Integration for the separate feature version
+
+This experimental branch preserves the MIT survey core. Use the feature client and feature handler together; neither accepts a client-supplied model. A model bundle must match the exact server-owned survey, dimensions, rubric order, pinned Jev version and target labels. Scripted demo weights are rejected by the live feature handler. See [feature training](FEATURES.md). The legacy direct-classification API remains available only for compatibility.
+
 # Integration
 
 ## Browser and server responsibilities
@@ -24,14 +28,16 @@ The answer mapper never receives camera/profile inputs. The context classifier r
 ## Live browser adapter
 
 ```ts
-import { createHttpAnalysis, createSessionStarter, createCameraObserver, speakingProfile } from "voice-survey-jev";
-import { mountVoiceSurvey } from "voice-survey-jev/browser";
-import { GeminiVoice, OpenAIVoice } from "voice-survey-jev/providers";
+import { createSessionStarter, createCameraObserver, speakingProfile } from "voice-survey-jev-features";
+import { mountVoiceSurvey } from "voice-survey-jev-features/browser";
+import { createHttpFeatureAnalysis } from "voice-survey-jev-features/features";
+import { GeminiVoice, OpenAIVoice } from "voice-survey-jev-features/providers";
 
 const startSession = createSessionStarter("/api/voice-survey");
 const widget = mountVoiceSurvey(container, {
   survey,
-  ...createHttpAnalysis("/api/voice-survey"),
+  candidateLabel: "重み付きモデルの候補（未確定）", scoreLabel: "候補スコア",
+  ...createHttpFeatureAnalysis("/api/voice-survey"),
   profile: speakingProfile,
   models: [
     { key: "gemini", label: "Gemini Live", create: () => new GeminiVoice({
@@ -55,18 +61,18 @@ Call `widget.destroy()` when the host removes the component. Visibility loss and
 
 ## Server endpoint
 
-`createSurveyHandler` accepts standard Fetch API Request/Response objects. Adapt it to your server or worker:
+`createFeatureSurveyHandler` accepts standard Fetch API Request/Response objects. Adapt it to your server or worker:
 
 ```ts
-import { createSurveyHandler } from "voice-survey-jev/server";
+import { createFeatureSurveyHandler } from "voice-survey-jev-features/server/features";
 
-const handle = createSurveyHandler({
+const handle = createFeatureSurveyHandler({
+  bundle: yourLocallyLoadedFeatureBundle, // Weights fitted on actual Jev features.
   survey, // Server-owned; do not trust a client-supplied question/prompt.
   allowedOrigins: [process.env.SURVEY_ORIGIN!],
   authorize: request => yourExistingAuthenticationAndSurveyAuthorization(request),
   consumeBudget: request => yourDistributedSessionBudget(request),
   typesafeApiKey: process.env.TYPESAFE_API_KEY,
-  jevModel: process.env.JEV_MODEL ?? "jev-1.13.0",
   geminiApiKey: process.env.GEMINI_API_KEY,
   openaiApiKey: process.env.OPENAI_API_KEY,
   openaiTranscriptionModel: process.env.OPENAI_TRANSCRIPTION_MODEL,
@@ -96,10 +102,10 @@ For a host that supports prefilled links, `prefillUrl(base, confirmed, mapping)`
 ## Custom Element
 
 ```ts
-import { defineVoiceSurveyElement } from "voice-survey-jev/browser";
+import { defineVoiceSurveyElement } from "voice-survey-jev-features/browser";
 defineVoiceSurveyElement();
 const element = document.createElement("voice-survey");
-element.options = { survey, ...createHttpAnalysis() };
+element.options = { survey, ...createHttpFeatureAnalysis() };
 container.append(element);
 ```
 

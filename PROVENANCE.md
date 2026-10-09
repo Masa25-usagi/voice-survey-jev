@@ -1,5 +1,7 @@
 # Provenance and license boundary
 
+2026-10-10 feature version: this separate experimental branch reuses the independently authored MIT public core at `8cb97b984225da2210ce325552e9c53f2d2c5ba6`. The new feature schemas, Jev score client, regularized linear learner, designer interface, CLI, inspection UI and fictional fixtures were independently authored for this branch. No original unlicensed service modules, private environment, production data or recordings were added. The public `main` baseline is retained. TypeSafe's official API/model/pattern documentation informed the contracts; no cookbook implementation or external dataset was copied. The original core provenance below still applies to reused files.
+
 2026-10-09. This repository was written as a new implementation, starting from an empty directory and a new Git history. No previous working tree, Git objects, deployed bundle, copied application module, image, recording, response data, environment file or credential was imported.
 
 The functional reference was the latest deployed Jev voice-interview prototype, version 3, source baseline `f08590a21bbb02d6ae683c6d58b11835cacd5609`. Read-only Sites version/deployment metadata and a matching clean local checkout identified the baseline. The public interview screen and the prototype's functional notes were inspected. No production sessions were started and no production database, answer rows, worker logs or environment settings were requested. Private paths and deployment identifiers are intentionally absent here.

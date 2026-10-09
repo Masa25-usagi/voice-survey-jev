@@ -1,5 +1,16 @@
 # Verification record
 
+## Separate feature version — 2026-10-10
+
+- Public MIT baseline: `8cb97b984225da2210ce325552e9c53f2d2c5ba6`. The original checkout remains clean at this commit; the new checkout uses `experimental/jev-features`, a separate package name and loopback port 4387.
+- `npm test`: 137 passing tests, zero failures/skips, including the existing 98 core tests. TypeScript compilation passes.
+- New tests cover score-only requests, exact rubric/expectation/distribution validation, pinned-model drift, schema identities, immutable proposals, LLM training-only input, signed learned weights, regularization, validation selection independent of test values/labels, low-margin abstention, duplicate/group/class-support rejection, evidence masks, all four survey types, skipped/declined/no-answer states, live-handler mock contracts and late-cancellation/manual protection.
+- CLI train/evaluate was exercised with the original fictional feature cache. The final evaluation is a separate operation and does not update the model. No API key or paid service was used.
+- Browser Harness operated the new demo in Chrome at 390 × 844 CSS pixels, using target-scoped focus emulation so an inactive full-screen browser could process input. Coordinate clicks were used for the four question types, manual protection, explicit confirmation, free-text editing, reset, re-fitting and final-test freezing. Nine answer dimensions and eight dialogue rows appeared. Completion cleared inspection traces. No runtime errors, media request, external-origin resource request, persistent storage entry or horizontal overflow occurred.
+- All demo measurements/labels are scripted original fictional fixtures. Its perfect matches verify the numerical/UI contract and do not measure live Jev, unknown Japanese speech, or generalization. The quoted Claude/GPT result is not reproduced.
+
+The baseline record below describes the original independent core checks; this feature run does not count the old service as a successful new live experiment.
+
 2026-10-09. These checks concern this independent implementation, not the running reference service.
 
 ## Automated checks

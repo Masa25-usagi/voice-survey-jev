@@ -1,5 +1,7 @@
 # Data boundaries
 
+Feature version: LLM design receives task information and bounded training examples/labels only when explicitly invoked. Runtime Jev extraction receives no teacher labels. Word and camera dimensions have separate input states and constrained downstream weights. Feature traces in the demo contain scores, weights and contributions; they are cleared on stop/reset/question change and live only in memory. The CLI creates private local caches with IDs, groups, labels, input digests and feature values, and fitted models with definitions/parameters/aggregate metrics. It omits raw transcripts from caches and models, but task definitions and labels can themselves be confidential; the user controls any export and must keep real training files outside the public checkout.
+
 The source, sample survey, scripts and fixtures contain fictional content. There are no real recordings, camera images, demographic profiles, health histories, private accounts or respondent answers in the distribution. Long-term keys are empty environment variables in an example file; the project includes no credential.
 
 | Data | Where used | Lifetime / output |
